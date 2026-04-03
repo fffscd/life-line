@@ -25,3 +25,4 @@ if git diff --cached --quiet; then
 fi
 
 git commit -m "$COMMIT_MESSAGE"
+git push origin main
