@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Life Line">
+  <rect width="64" height="64" rx="12" fill="#f7f4ed"/>
+  <path d="M10 38 C19 14 29 51 38 27 S52 24 54 34" fill="none" stroke="#17211c" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="18" cy="24" r="5" fill="#3167a9"/>
+  <circle cx="35" cy="31" r="5" fill="#2f7d5b"/>
+  <circle cx="50" cy="29" r="5" fill="#c85f45"/>
+</svg>
