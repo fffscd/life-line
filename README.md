@@ -18,7 +18,7 @@
 ```bash
 git add .
 git commit -m "Create GitHub Pages site"
-git remote add origin https://github.com/<你的 GitHub 用户名>/life-line.git
+git remote add origin git@github.com:fffscd/life-line.git
 git push -u origin main
 ```
 
