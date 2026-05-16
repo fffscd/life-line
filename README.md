@@ -1,15 +1,21 @@
 # Life Line
 
-一个可以直接部署到 GitHub Pages 的个人公开主页。站点源码放在 `site/` 目录，部署流程放在 `.github/workflows/pages.yml`。
+一个已经部署到 GitHub Pages 的个人公开主页。站点源码放在 `site/` 目录，部署流程放在 `.github/workflows/pages.yml`。
+
+公开地址：
+
+```text
+https://fffscd.github.io/life-line/
+```
 
 ## 部署原理
 
-这个仓库使用 GitHub Pages 的 Actions 发布方式：
+这个仓库使用 GitHub Pages 的分支发布方式：
 
 1. `main` 分支收到推送。
 2. GitHub Actions 读取 `site/` 目录。
-3. `actions/upload-pages-artifact` 把静态文件打包成 Pages artifact。
-4. `actions/deploy-pages` 把 artifact 发布为公开网站。
+3. workflow 把静态文件同步到 `gh-pages` 分支。
+4. GitHub Pages 从 `gh-pages` 分支根目录发布公开网站。
 
 ## 首次发布
 
@@ -22,7 +28,7 @@ git remote add origin git@github.com:fffscd/life-line.git
 git push -u origin main
 ```
 
-进入 GitHub 仓库的 `Settings` → `Pages`，把 `Build and deployment` 的 `Source` 设为 `GitHub Actions`。工作流完成后，网站地址通常是：
+如果需要重新配置 Pages，进入 GitHub 仓库的 `Settings` → `Pages`，把 `Build and deployment` 的 `Source` 设为 `Deploy from a branch`，分支选择 `gh-pages`，目录选择 `/root`。工作流完成后，网站地址通常是：
 
 ```text
 https://<你的 GitHub 用户名>.github.io/life-line/
@@ -50,4 +56,4 @@ http://127.0.0.1:8000/
 
 ## 日常更新
 
-修改 `site/index.html`、`site/styles.css` 或 `site/script.js` 后提交并推送到 `main` 分支，GitHub Actions 会重新发布网站。
+修改 `site/index.html`、`site/styles.css` 或 `site/script.js` 后提交并推送到 `main` 分支，GitHub Actions 会更新 `gh-pages` 分支，公开网站会随后刷新。

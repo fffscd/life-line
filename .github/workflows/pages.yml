@@ -7,36 +7,44 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - name: Publish site to gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Upload static site
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: site
+          rm -rf "$RUNNER_TEMP/pages"
+          mkdir -p "$RUNNER_TEMP/pages"
+          cp -R site/. "$RUNNER_TEMP/pages/"
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          git fetch origin gh-pages || true
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git checkout -B gh-pages origin/gh-pages
+            find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          else
+            git checkout --orphan gh-pages
+            git rm -rf . || true
+          fi
+
+          cp -R "$RUNNER_TEMP/pages/." .
+          touch .nojekyll
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+          else
+            git commit -m "Deploy site"
+            git push origin gh-pages
+          fi
