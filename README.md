@@ -60,11 +60,15 @@ http://127.0.0.1:8000/
 
 ## 写博客
 
-文章按 `年/月/日` 放在 `site/records/` 目录下。例如 2026 年 4 月 3 日的文章路径是：
+文章按 `年/月/日` 放在 `site/records/` 目录下，正文使用 Markdown。例如 2026 年 4 月 3 日的文章路径是：
 
 ```text
-site/records/2026/04/03/index.html
+site/records/2026/04/03/
+├── index.html
+└── index.md
 ```
+
+`index.html` 是文章页面外壳，`index.md` 是正文。新增文章时可以复制已有文章目录，修改 `index.html` 里的标题、日期和说明，然后把正文写进 `index.md`。
 
 每新增一篇文章，同时把文章信息加入 `site/records/index.js`：
 
@@ -81,3 +85,5 @@ window.LIFE_LINE_RECORDS = [
 ```
 
 首页会读取这个索引，把最新记录显示在“近期记录”区域。路径里的目录使用 `YYYY/MM/DD`，索引里的日期使用 `YYYY-MM-DD`，这样方便排序和展示。
+
+Markdown 正文支持常用格式：段落、二级到五级标题、无序列表、有序列表、引用、分割线、行内代码、代码块、粗体和链接。
