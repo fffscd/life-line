@@ -371,6 +371,20 @@ h3 {
   font-weight: 780;
 }
 
+.record-link,
+.back-link {
+  color: var(--blue);
+  font-weight: 780;
+}
+
+.record-link:hover,
+.record-link:focus-visible,
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--coral);
+  outline: none;
+}
+
 .notes-section {
   padding-bottom: 96px;
 }
@@ -423,6 +437,45 @@ h3 {
   padding: 0 0 36px;
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.article-page {
+  min-height: 100vh;
+}
+
+.article-shell {
+  width: min(100% - 32px, 820px);
+  margin: 0 auto;
+  padding: 156px 0 72px;
+}
+
+.article-content {
+  padding: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 12px 34px rgba(23, 33, 28, 0.07);
+}
+
+.article-content h1 {
+  margin-top: 12px;
+  font-size: 3.8rem;
+}
+
+.article-content p {
+  margin: 22px 0 0;
+  color: #344038;
+  font-size: 1.08rem;
+}
+
+.article-content .article-lead {
+  color: var(--ink);
+  font-size: 1.22rem;
+}
+
+.article-content .back-link {
+  display: inline-flex;
+  margin-bottom: 24px;
 }
 
 @media (max-width: 820px) {
@@ -490,6 +543,10 @@ h3 {
   .contact-links {
     justify-content: flex-start;
   }
+
+  .article-content h1 {
+    font-size: 2.8rem;
+  }
 }
 
 @media (max-width: 520px) {
@@ -529,8 +586,18 @@ h3 {
 
   .overview-item,
   .project-card,
-  .note-item {
+  .note-item,
+  .article-content {
     padding: 18px;
+  }
+
+  .article-shell {
+    width: min(100% - 24px, 820px);
+    padding-top: 150px;
+  }
+
+  .article-content h1 {
+    font-size: 2.3rem;
   }
 }
 
