@@ -10,6 +10,8 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 1
 fi
 
+node scripts/build-records.js
+
 if [ -z "$(git status --porcelain)" ]; then
   printf '%s\n' "No changes detected. Nothing to commit."
   exit 0

@@ -60,30 +60,45 @@ http://127.0.0.1:8000/
 
 ## 写博客
 
-文章按 `年/月/日` 放在 `site/records/` 目录下，正文使用 Markdown。例如 2026 年 4 月 3 日的文章路径是：
+文章正文使用 Markdown。新增记录只需要创建一个 Markdown 文件，推荐沿用现在的 `年/月日` 习惯：
 
 ```text
-site/records/2026/04/03/
-├── index.html
-└── index.md
+2026/0517.md
 ```
 
-`index.html` 是文章页面外壳，`index.md` 是正文。新增文章时可以复制已有文章目录，修改 `index.html` 里的标题、日期和说明，然后把正文写进 `index.md`。
+推荐写法：
 
-每新增一篇文章，同时把文章信息加入 `site/records/index.js`：
+```md
+---
+title: 记录标题
+category: 生活
+summary: 首页显示的摘要
+---
 
-```js
-window.LIFE_LINE_RECORDS = [
-  {
-    title: "最近的状态",
-    date: "2026-04-03",
-    category: "生活",
-    summary: "压力有些大，先休息几天，恢复节奏。",
-    href: "./records/2026/04/03/",
-  },
-];
+正文从这里开始写。
 ```
 
-首页会读取这个索引，把最新记录显示在“近期记录”区域。路径里的目录使用 `YYYY/MM/DD`，索引里的日期使用 `YYYY-MM-DD`，这样方便排序和展示。
+`title`、`category`、`summary` 都可以省略。省略时系统会从路径、一级标题和正文自动推导。
+
+如果你希望文件完全放在站点目录里，也可以使用这个路径：
+
+```text
+site/records/2026/05/17/index.md
+```
+
+发布时 GitHub Actions 会运行：
+
+```bash
+node scripts/build-records.js
+```
+
+这个脚本会扫描 `2026/0517.md`、`2026/0517` 以及 `site/records/**/index.md`，自动生成文章页面和 `site/records/index.js`，首页会读取生成后的索引，把最新记录显示在“近期记录”区域。使用 `./auto-commit.sh` 时也会先自动生成记录文件。
+
+本地预览前可以手动运行一次：
+
+```bash
+node scripts/build-records.js
+python3 -m http.server 8000 --directory site
+```
 
 Markdown 正文支持常用格式：段落、二级到五级标题、无序列表、有序列表、引用、分割线、行内代码、代码块、粗体和链接。
