@@ -3,6 +3,49 @@ if (yearElement) {
   yearElement.textContent = new Date().getFullYear().toString();
 }
 
+const formatRecordDate = (value) => {
+  const [year, month, day] = value.split("-");
+  return [year, month, day].filter(Boolean).join("/");
+};
+
+const recordList = document.querySelector("#recordList");
+const records = Array.isArray(window.LIFE_LINE_RECORDS)
+  ? window.LIFE_LINE_RECORDS
+  : [];
+
+if (recordList instanceof HTMLElement && records.length > 0) {
+  const fragment = document.createDocumentFragment();
+  const sortedRecords = records
+    .filter((record) => record.title && record.date && record.href)
+    .sort((left, right) => right.date.localeCompare(left.date))
+    .slice(0, 6);
+
+  sortedRecords.forEach((record) => {
+    const item = document.createElement("article");
+    item.className = "note-item";
+
+    const meta = document.createElement("span");
+    meta.textContent = `${record.category || "记录"} / ${formatRecordDate(record.date)}`;
+
+    const title = document.createElement("h3");
+    const link = document.createElement("a");
+    link.className = "record-link";
+    link.href = record.href;
+    link.textContent = record.title;
+    title.append(link);
+
+    const summary = document.createElement("p");
+    summary.textContent = record.summary || "查看完整记录。";
+
+    item.append(meta, title, summary);
+    fragment.append(item);
+  });
+
+  if (fragment.childNodes.length > 0) {
+    recordList.replaceChildren(fragment);
+  }
+}
+
 const canvas = document.querySelector("#lifeCanvas");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 

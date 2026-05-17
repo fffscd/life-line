@@ -57,3 +57,27 @@ http://127.0.0.1:8000/
 ## 日常更新
 
 修改 `site/index.html`、`site/styles.css` 或 `site/script.js` 后提交并推送到 `main` 分支，GitHub Actions 会更新 `gh-pages` 分支，公开网站会随后刷新。
+
+## 写博客
+
+文章按 `年/月/日` 放在 `site/records/` 目录下。例如 2026 年 4 月 3 日的文章路径是：
+
+```text
+site/records/2026/04/03/index.html
+```
+
+每新增一篇文章，同时把文章信息加入 `site/records/index.js`：
+
+```js
+window.LIFE_LINE_RECORDS = [
+  {
+    title: "最近的状态",
+    date: "2026-04-03",
+    category: "生活",
+    summary: "压力有些大，先休息几天，恢复节奏。",
+    href: "./records/2026/04/03/",
+  },
+];
+```
+
+首页会读取这个索引，把最新记录显示在“近期记录”区域。路径里的目录使用 `YYYY/MM/DD`，索引里的日期使用 `YYYY-MM-DD`，这样方便排序和展示。
