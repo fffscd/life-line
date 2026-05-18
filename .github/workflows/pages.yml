@@ -31,6 +31,10 @@ jobs:
           rm -rf "$RUNNER_TEMP/pages"
           mkdir -p "$RUNNER_TEMP/pages"
           cp -R site/. "$RUNNER_TEMP/pages/"
+          find "$RUNNER_TEMP/pages" -name .generated-record -delete
+
+          git reset --hard
+          git clean -fd
 
           git fetch origin gh-pages || true
           if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
