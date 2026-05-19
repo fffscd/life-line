@@ -415,9 +415,10 @@ const createArticleHtml = ({
         <span>Life Line</span>
       </a>
       <nav class="nav-links" aria-label="主要导航">
-        <a href="../../../../#timeline">轨迹</a>
-        <a href="../../../../#projects">项目</a>
         <a href="../../../../#notes">记录</a>
+        <a href="../../../../#running">跑步</a>
+        <a href="../../../../#reading">阅读</a>
+        <a href="../../../../#photos">日常照片</a>
         <a href="../../../../#contact">联系</a>
       </nav>
     </header>
