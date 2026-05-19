@@ -9,40 +9,57 @@ const formatRecordDate = (value) => {
 };
 
 const recordList = document.querySelector("#recordList");
+const showMoreRecordsButton = document.querySelector("#showMoreRecords");
 const records = Array.isArray(window.LIFE_LINE_RECORDS)
   ? window.LIFE_LINE_RECORDS
   : [];
+const initialRecordCount = 10;
 
 if (recordList instanceof HTMLElement && records.length > 0) {
-  const fragment = document.createDocumentFragment();
   const sortedRecords = records
     .filter((record) => record.title && record.date && record.href)
-    .sort((left, right) => right.date.localeCompare(left.date))
-    .slice(0, 6);
+    .sort((left, right) => right.date.localeCompare(left.date));
 
-  sortedRecords.forEach((record) => {
-    const item = document.createElement("article");
-    item.className = "note-item";
+  const renderRecords = (visibleRecords) => {
+    const fragment = document.createDocumentFragment();
 
-    const meta = document.createElement("span");
-    meta.textContent = `${record.category || "记录"} / ${formatRecordDate(record.date)}`;
+    visibleRecords.forEach((record) => {
+      const item = document.createElement("article");
+      item.className = "note-item";
 
-    const title = document.createElement("h3");
-    const link = document.createElement("a");
-    link.className = "record-link";
-    link.href = record.href;
-    link.textContent = record.title;
-    title.append(link);
+      const meta = document.createElement("span");
+      meta.textContent = `${record.category || "记录"} / ${formatRecordDate(record.date)}`;
 
-    const summary = document.createElement("p");
-    summary.textContent = record.summary || "查看完整记录。";
+      const title = document.createElement("h3");
+      const link = document.createElement("a");
+      link.className = "record-link";
+      link.href = record.href;
+      link.textContent = record.title;
+      title.append(link);
 
-    item.append(meta, title, summary);
-    fragment.append(item);
-  });
+      const summary = document.createElement("p");
+      summary.textContent = record.summary || "查看完整记录。";
 
-  if (fragment.childNodes.length > 0) {
-    recordList.replaceChildren(fragment);
+      item.append(meta, title, summary);
+      fragment.append(item);
+    });
+
+    if (fragment.childNodes.length > 0) {
+      recordList.replaceChildren(fragment);
+    }
+  };
+
+  renderRecords(sortedRecords.slice(0, initialRecordCount));
+
+  if (
+    showMoreRecordsButton instanceof HTMLButtonElement &&
+    sortedRecords.length > initialRecordCount
+  ) {
+    showMoreRecordsButton.hidden = false;
+    showMoreRecordsButton.addEventListener("click", () => {
+      renderRecords(sortedRecords);
+      showMoreRecordsButton.hidden = true;
+    });
   }
 }
 

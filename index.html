@@ -22,15 +22,16 @@
     <a class="skip-link" href="#main">跳到正文</a>
 
     <header class="site-header" aria-label="站点导航">
-      <a class="brand" href="#top" aria-label="Life Line 首页">
+      <a class="brand" href="./" aria-label="Life Line 首页">
         <span class="brand-mark" aria-hidden="true"></span>
         <span>Life Line</span>
       </a>
       <nav class="nav-links" aria-label="主要导航">
-        <a href="#timeline">轨迹</a>
-        <a href="#projects">项目</a>
-        <a href="#notes">记录</a>
-        <a href="#contact">联系</a>
+        <a href="./records.html">记录</a>
+        <a href="./running.html">跑步</a>
+        <a href="./reading.html">阅读</a>
+        <a href="./photos.html">日常照片</a>
+        <a href="./contact.html">联系</a>
       </nav>
     </header>
 
@@ -44,8 +45,8 @@
             把作品、学习、计划和长期记录放到一个公开可访问的位置，让重要信息保持清晰、有序、持续更新。
           </p>
           <div class="hero-actions" aria-label="页面入口">
-            <a class="button primary" href="#projects">查看项目</a>
-            <a class="button secondary" href="#contact">公开链接</a>
+            <a class="button primary" href="./records.html">查看记录</a>
+            <a class="button secondary" href="./contact.html">公开链接</a>
           </div>
         </div>
       </section>
@@ -65,88 +66,42 @@
         </div>
       </section>
 
-      <section id="timeline" class="content-section split-section">
-        <div class="section-heading">
-          <p class="eyebrow">Timeline</p>
-          <h2>公开轨迹</h2>
-        </div>
-        <div class="timeline-list" aria-label="时间线">
-          <article class="timeline-entry">
-            <time datetime="2026">2026</time>
-            <div>
-              <h3>建立个人公开主页</h3>
-              <p>整理公开资料、项目入口和写作记录，形成稳定更新节奏。</p>
-            </div>
-          </article>
-          <article class="timeline-entry">
-            <time datetime="2025">2025</time>
-            <div>
-              <h3>沉淀可复用项目</h3>
-              <p>把常用工具、实验代码和产品想法归档到可分享的仓库。</p>
-            </div>
-          </article>
-          <article class="timeline-entry">
-            <time datetime="2024">2024</time>
-            <div>
-              <h3>保持长期记录</h3>
-              <p>用简洁的公开页面承接作品、阅读、学习和生活计划。</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
       <section id="projects" class="content-section">
         <div class="section-heading wide">
           <p class="eyebrow">Projects</p>
-          <h2>项目入口</h2>
+          <h2>独立页面</h2>
         </div>
         <div class="project-grid">
           <article class="project-card">
             <div class="project-accent blue" aria-hidden="true"></div>
-            <h3>公开作品索引</h3>
-            <p>集中展示可以对外分享的工具、应用、文档和仓库。</p>
-            <a href="https://github.com/" rel="noreferrer">GitHub</a>
+            <h3>记录</h3>
+            <p>按时间展示最近记录，超过十条时可以展开全部。</p>
+            <a href="./records.html">打开页面</a>
           </article>
           <article class="project-card">
             <div class="project-accent green" aria-hidden="true"></div>
-            <h3>学习记录</h3>
-            <p>记录阅读、课程、技术验证和阶段性复盘。</p>
-            <a href="#notes">查看记录</a>
+            <h3>跑步</h3>
+            <p>整理跑步训练、路线、里程和阶段状态。</p>
+            <a href="./running.html">打开页面</a>
           </article>
           <article class="project-card">
             <div class="project-accent coral" aria-hidden="true"></div>
-            <h3>生活实验</h3>
-            <p>追踪习惯、运动、健康和长期目标的执行情况。</p>
-            <a href="#timeline">查看轨迹</a>
+            <h3>阅读</h3>
+            <p>整理书目、笔记、摘录和阶段性思考。</p>
+            <a href="./reading.html">打开页面</a>
           </article>
-        </div>
-      </section>
-
-      <section id="notes" class="content-section split-section notes-section">
-        <div class="section-heading">
-          <p class="eyebrow">Notes</p>
-          <h2>近期记录</h2>
-        </div>
-        <div class="note-list" id="recordList" aria-label="近期记录列表">
-          <article class="note-item">
-            <span>生活 / 2026/04/03</span>
-            <h3>
-              <a class="record-link" href="./records/2026/04/03/">最近的状态</a>
-            </h3>
-            <p>压力有些大，先休息几天，恢复节奏。</p>
+          <article class="project-card">
+            <div class="project-accent gold" aria-hidden="true"></div>
+            <h3>日常照片</h3>
+            <p>放置日常照片、生活片段和可公开分享的影像记录。</p>
+            <a href="./photos.html">打开页面</a>
           </article>
-        </div>
-      </section>
-
-      <section id="contact" class="contact-section" aria-labelledby="contact-title">
-        <div>
-          <p class="eyebrow">Public Links</p>
-          <h2 id="contact-title">公开链接</h2>
-        </div>
-        <div class="contact-links">
-          <a href="https://github.com/" rel="noreferrer">GitHub</a>
-          <a href="mailto:you@example.com">Email</a>
-          <a href="#top">返回顶部</a>
+          <article class="project-card">
+            <div class="project-accent coral" aria-hidden="true"></div>
+            <h3>联系</h3>
+            <p>集中放置公开链接和联系方式。</p>
+            <a href="./contact.html">打开页面</a>
+          </article>
         </div>
       </section>
     </main>
@@ -156,7 +111,6 @@
       <span>Powered by GitHub Pages</span>
     </footer>
 
-    <script src="./records/index.js" defer></script>
     <script src="./script.js" defer></script>
   </body>
 </html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Life Line 的近期记录列表。" />
+    <meta name="theme-color" content="#f7f4ed" />
+    <title>记录 | Life Line</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+
+    <header class="site-header" aria-label="站点导航">
+      <a class="brand" href="./" aria-label="Life Line 首页">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Life Line</span>
+      </a>
+      <nav class="nav-links" aria-label="主要导航">
+        <a href="./records.html" aria-current="page">记录</a>
+        <a href="./running.html">跑步</a>
+        <a href="./reading.html">阅读</a>
+        <a href="./photos.html">日常照片</a>
+        <a href="./contact.html">联系</a>
+      </nav>
+    </header>
+
+    <main id="main" class="page-shell">
+      <section class="split-section notes-section page-section">
+        <div class="section-heading">
+          <p class="eyebrow">Notes</p>
+          <h1>近期记录</h1>
+        </div>
+        <div class="notes-content">
+          <div class="note-list" id="recordList" aria-label="近期记录列表">
+            <article class="note-item">
+              <span>生活 / 2026/04/03</span>
+              <h3>
+                <a class="record-link" href="./records/2026/04/03/">最近的状态</a>
+              </h3>
+              <p>压力有些大，先休息几天，恢复节奏。</p>
+            </article>
+          </div>
+          <div class="note-actions">
+            <button class="button secondary record-more" id="showMoreRecords" type="button" hidden>
+              查看更多
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>© <span id="year"></span> Life Line</span>
+      <span>Powered by GitHub Pages</span>
+    </footer>
+
+    <script src="./records/index.js" defer></script>
+    <script src="./script.js" defer></script>
+  </body>
+</html>
