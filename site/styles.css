@@ -517,6 +517,14 @@ h3 {
   margin-top: 8px;
 }
 
+.markdown-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 24px 0 0;
+  border-radius: 8px;
+}
+
 .markdown-body blockquote {
   margin: 24px 0 0;
   padding: 2px 0 2px 18px;

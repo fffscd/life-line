@@ -42,9 +42,10 @@ https://<你的 GitHub 用户名>.github.io/
 
 ## 本地预览
 
-这个站点没有构建步骤，直接打开 `site/index.html` 即可预览。也可以启动一个静态服务器：
+预览前先生成一次记录页面：
 
 ```bash
+node scripts/build-records.js
 python3 -m http.server 8000 --directory site
 ```
 
@@ -56,14 +57,22 @@ http://127.0.0.1:8000/
 
 ## 日常更新
 
-修改 `site/index.html`、`site/styles.css` 或 `site/script.js` 后提交并推送到 `main` 分支，GitHub Actions 会更新 `gh-pages` 分支，公开网站会随后刷新。
+写文章只需要新增或修改 Markdown 文件，然后提交并推送到 `main` 分支。GitHub Actions 会自动运行 `node scripts/build-records.js`，生成文章网页、更新首页记录列表，并发布到 `gh-pages` 分支。
+
+如果使用仓库里的脚本，可以执行：
+
+```bash
+./auto-commit.sh
+```
+
+它会先生成记录页面，再提交并推送。
 
 ## 写博客
 
-文章正文使用 Markdown。新增记录只需要创建一个 Markdown 文件，推荐沿用现在的 `年/月日` 习惯：
+文章正文使用 Markdown。新增记录推荐沿用现在的 `年/月日` 习惯：
 
 ```text
-2026/0517.md
+2026/0519.md
 ```
 
 推荐写法：
@@ -80,25 +89,12 @@ summary: 首页显示的摘要
 
 `title`、`category`、`summary` 都可以省略。省略时系统会从路径、一级标题和正文自动推导。
 
-如果你希望文件完全放在站点目录里，也可以使用这个路径：
+也可以省略 `.md` 后缀：
 
 ```text
-site/records/2026/05/17/index.md
+2026/0519
 ```
 
-发布时 GitHub Actions 会运行：
+生成脚本会扫描 `2026/0519.md`、`2026/0519` 以及 `site/records/**/index.md`，自动生成文章页面和 `site/records/index.js`。`site/records/**/index.html` 属于生成结果，日常写作无需手动修改。
 
-```bash
-node scripts/build-records.js
-```
-
-这个脚本会扫描 `2026/0517.md`、`2026/0517` 以及 `site/records/**/index.md`，自动生成文章页面和 `site/records/index.js`，首页会读取生成后的索引，把最新记录显示在“近期记录”区域。使用 `./auto-commit.sh` 时也会先自动生成记录文件。
-
-本地预览前可以手动运行一次：
-
-```bash
-node scripts/build-records.js
-python3 -m http.server 8000 --directory site
-```
-
-Markdown 正文支持常用格式：段落、二级到五级标题、无序列表、有序列表、引用、分割线、行内代码、代码块、粗体和链接。
+Markdown 正文支持常用格式：段落、二级到五级标题、无序列表、有序列表、引用、分割线、行内代码、代码块、粗体、链接和图片。

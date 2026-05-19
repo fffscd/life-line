@@ -16,6 +16,21 @@ const htmlEscapeMap = new Map([
 const escapeHtml = (value) =>
   String(value).replace(/[&<>"]/g, (char) => htmlEscapeMap.get(char));
 
+const getSafeMarkdownUrl = (url) => {
+  const value = url.trim();
+  const lowerValue = value.replace(/[\u0000-\u001F\u007F\s]+/g, "").toLowerCase();
+
+  if (
+    lowerValue.startsWith("javascript:") ||
+    lowerValue.startsWith("data:") ||
+    lowerValue.startsWith("vbscript:")
+  ) {
+    return "#";
+  }
+
+  return value;
+};
+
 const parseFrontMatter = (markdown) => {
   if (!markdown.startsWith("---")) {
     return { data: {}, body: markdown };
@@ -91,6 +106,170 @@ const getSummary = (body) => {
   }
 
   return line.length > 72 ? `${line.slice(0, 72)}...` : line;
+};
+
+const renderInlineMarkdown = (text) => {
+  const pattern = /(!?\[([^\]]*)\]\(([^)]+)\)|`([^`]+)`|\*\*([^*]+)\*\*)/g;
+  let cursor = 0;
+  let html = "";
+  let match = pattern.exec(text);
+
+  while (match) {
+    if (match.index > cursor) {
+      html += escapeHtml(text.slice(cursor, match.index));
+    }
+
+    if (match[1]) {
+      const label = match[2];
+      const url = getSafeMarkdownUrl(match[3]);
+
+      if (match[1].startsWith("!")) {
+        html += `<img src="${escapeHtml(url)}" alt="${escapeHtml(label)}" loading="lazy" />`;
+      } else {
+        const rel = /^https?:\/\//i.test(url) ? ' rel="noreferrer"' : "";
+        html += `<a href="${escapeHtml(url)}"${rel}>${escapeHtml(label)}</a>`;
+      }
+    } else if (match[4]) {
+      html += `<code>${escapeHtml(match[4])}</code>`;
+    } else if (match[5]) {
+      html += `<strong>${escapeHtml(match[5])}</strong>`;
+    }
+
+    cursor = pattern.lastIndex;
+    match = pattern.exec(text);
+  }
+
+  if (cursor < text.length) {
+    html += escapeHtml(text.slice(cursor));
+  }
+
+  return html;
+};
+
+const removeLeadingTitleHeading = (body, title) => {
+  const lines = body.replace(/^\uFEFF/, "").split(/\r?\n/);
+  const headingIndex = lines.findIndex((line) => line.trim() !== "");
+
+  if (headingIndex < 0) {
+    return "";
+  }
+
+  const headingMatch = /^#\s+(.+)$/.exec(lines[headingIndex].trim());
+  if (!headingMatch || headingMatch[1].trim() !== title) {
+    return body;
+  }
+
+  lines.splice(headingIndex, 1);
+  return lines.join("\n").replace(/^\s+/, "");
+};
+
+const renderMarkdownToHtml = (markdown) => {
+  const lines = markdown.replace(/^\uFEFF/, "").split(/\r?\n/);
+  const html = [];
+  let paragraphLines = [];
+  let list = null;
+  let codeLines = [];
+  let inCodeBlock = false;
+
+  const flushParagraph = () => {
+    if (paragraphLines.length === 0) {
+      return;
+    }
+
+    html.push(`<p>${renderInlineMarkdown(paragraphLines.join(" "))}</p>`);
+    paragraphLines = [];
+  };
+
+  const flushList = () => {
+    if (!list) {
+      return;
+    }
+
+    html.push(`<${list.tagName}>${list.items.join("")}</${list.tagName}>`);
+    list = null;
+  };
+
+  const appendCodeBlock = () => {
+    html.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+    codeLines = [];
+  };
+
+  lines.forEach((line) => {
+    if (line.trim().startsWith("```")) {
+      flushParagraph();
+      flushList();
+
+      if (inCodeBlock) {
+        appendCodeBlock();
+        inCodeBlock = false;
+      } else {
+        inCodeBlock = true;
+      }
+      return;
+    }
+
+    if (inCodeBlock) {
+      codeLines.push(line);
+      return;
+    }
+
+    if (line.trim() === "") {
+      flushParagraph();
+      flushList();
+      return;
+    }
+
+    const headingMatch = /^(#{1,4})\s+(.+)$/.exec(line);
+    if (headingMatch) {
+      flushParagraph();
+      flushList();
+      const level = Math.min(5, headingMatch[1].length + 1);
+      html.push(`<h${level}>${renderInlineMarkdown(headingMatch[2])}</h${level}>`);
+      return;
+    }
+
+    if (/^(-{3,}|\*{3,})$/.test(line.trim())) {
+      flushParagraph();
+      flushList();
+      html.push("<hr />");
+      return;
+    }
+
+    const quoteMatch = /^>\s?(.+)$/.exec(line);
+    if (quoteMatch) {
+      flushParagraph();
+      flushList();
+      html.push(`<blockquote><p>${renderInlineMarkdown(quoteMatch[1])}</p></blockquote>`);
+      return;
+    }
+
+    const unorderedListMatch = /^[-*]\s+(.+)$/.exec(line);
+    const orderedListMatch = /^\d+\.\s+(.+)$/.exec(line);
+    const listMatch = unorderedListMatch || orderedListMatch;
+
+    if (listMatch) {
+      flushParagraph();
+      const listTagName = unorderedListMatch ? "ul" : "ol";
+      if (!list || list.tagName !== listTagName) {
+        flushList();
+        list = { tagName: listTagName, items: [] };
+      }
+
+      list.items.push(`<li>${renderInlineMarkdown(listMatch[1])}</li>`);
+      return;
+    }
+
+    paragraphLines.push(line.trim());
+  });
+
+  flushParagraph();
+  flushList();
+
+  if (inCodeBlock) {
+    appendCodeBlock();
+  }
+
+  return html.join("\n") || "<p>暂无正文。</p>";
 };
 
 const getRecordDateParts = (relativePath) => {
@@ -210,7 +389,13 @@ const cleanupGeneratedRootRecords = async () => {
   }
 };
 
-const createArticleHtml = ({ title, description, category, displayDate }) => `<!doctype html>
+const createArticleHtml = ({
+  title,
+  description,
+  category,
+  displayDate,
+  bodyHtml,
+}) => `<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
@@ -238,12 +423,12 @@ const createArticleHtml = ({ title, description, category, displayDate }) => `<!
     </header>
 
     <main id="main" class="article-shell">
-      <article class="article-content" data-markdown-src="./index.md">
+      <article class="article-content">
         <a class="back-link" href="../../../../#notes">返回记录</a>
         <p class="eyebrow">${escapeHtml(category)} / ${escapeHtml(displayDate)}</p>
         <h1>${escapeHtml(title)}</h1>
         <div class="markdown-body" id="recordBody">
-          <p>正在加载记录。</p>
+${bodyHtml}
         </div>
       </article>
     </main>
@@ -282,6 +467,8 @@ const build = async () => {
     const summary = data.summary || getSummary(body);
     const category = data.category || "记录";
     const href = `./records/${dateParts.year}/${dateParts.month}/${dateParts.day}/`;
+    const articleBody = removeLeadingTitleHeading(body, title);
+    const bodyHtml = renderMarkdownToHtml(articleBody);
 
     records.push({
       title,
@@ -296,6 +483,7 @@ const build = async () => {
       description: summary,
       category,
       displayDate,
+      bodyHtml,
     });
 
     await fs.mkdir(path.dirname(outputMarkdownPath), { recursive: true });
